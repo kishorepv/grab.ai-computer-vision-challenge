@@ -60,9 +60,8 @@ Each experiment folder contains a different model which has an associated notebo
  * Sample usage of `test.py`
     * `python test.py --test_path=data/cars_test --model_path=data/cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results` - with TTA
     * `python test.py --test_path=data/cars_test --model_path=data/cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --no_tta` - without TTA
-
-
-
+* `experiment-2`
+ * In this experiment, the model is trained on vertical crops of images, similar to `experiment-1`. The difference being that the images are pre-processed to extract the car out of the image (using YOLO detector in opencv) and these car-crop images are futher prcessed to split each images into two by cutting them vertically in the center. The YOLO dectector is pretrained on the PASCAL dataset. This model achieves an accyracy of **90.5** for both with and without TTA.
 
 Trained models:
 * Expermient-wise trained models and other information can be downloaded from [here](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing)
