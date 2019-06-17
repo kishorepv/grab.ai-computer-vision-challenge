@@ -45,3 +45,25 @@ Training:
 * The model is trained for four epochs with all the layers frozen, except the last FC layer. After that the whole model is trained for 15 more epochs.
 * While training the while network discriminative/differential learning rate is used. In this way the earlier layer have a slower learning rate than the later layers.
 
+Inference:
+* During inference Test Time Augmentation (TTA) is done, which leads to improvement of the model performance. TTA was introduced in [Test-time augmentation with uncertainty estimation for deep learning-based medical image segmentation](https://pdfs.semanticscholar.org/c66a/9706949e7dfb21e7b2304574fb6bd5c3c632.pdf)
+
+
+
+Experiments:
+
+Each experiment folder contains a different model which has an associated notebook and test script.
+*  `experiment-1`
+ * In this experiment, the model is trained on vertical crops of images (as explained in first point of Feature Engineering) with above mentioned data augmentation. A pretrained `resnet152` architecture is used. The model achieves an accuracy of **88.7%** without TTA and **89.7%** with TTA
+ * Trained model can be found in this [Google Drive](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing) under `experiment-1` folder.
+ * To evaluate the model on a test set, use `test.py` located in the folder. The results are stored in folder specified by argument `--result_dir`. It contains the `predictions_TIMESTAMP.npy` (raw softmax scores for each test image), `predicted_labels_with_confidence_TIMESTAMP.npy` (confidence scores and the predicted label) and `test_file_names_TIMESTAMP.csv` (test image names to match the predictions).
+ * Sample usage of `test.py`
+    * `python test.py --test_path=data/cars_test --model_path=data/cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results` - with TTA
+    * `python test.py --test_path=data/cars_test --model_path=data/cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --no_tta` - without TTA
+
+
+
+
+Trained models:
+* Expermient-wise trained models and other information can be downloaded from [here](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing)
+
