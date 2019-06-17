@@ -24,7 +24,7 @@ Performance:
 * Accuracy on the test set of [Stanford Cars dataset](http://imagenet.stanford.edu/internal/car196/cars_train.tgz) is 90%
 
 Feature engineering:
-* One interesting observation was that the model can identify a car well enough just by looking at the front or back of the car. So to leverage that, the train dataset is preprocessed such that each input image is split into two vertical halves, each of which is a new image sharing the original label. This effectively doubles the train dataset.
+* One interesting observation was that the model can identify a car well enough just by looking at the front or back of the car. Leveraging this, the train dataset is preprocessed such that each input image is split into halves vertically, each of which is a new image sharing the original label. This effectively doubles the train dataset. This is done by the function `vertical_splitter`
 * Most of the images contain non-car information in it. Cropping out the car and using it for prediction can improve the performance of the model. To crop the cars out the images, the [YOLO model](https://docs.opencv.org/master/da/d9d/tutorial_dnn_yolo.html) available in opencv is used
 
 Data Augmentation:
@@ -54,15 +54,20 @@ Experiments:
 
 Each experiment folder contains a different model which has an associated notebook and test script.
 *  `experiment-1`
- * In this experiment, the model is trained on vertical crops of images (as explained in first point of Feature Engineering) with above mentioned data augmentation. A pretrained `resnet152` architecture is used. The model achieves an accuracy of **88.7%** without TTA and **89.7%** with TTA
+ * In this experiment, the model is trained on vertically split images (as explained in first point of Feature Engineering) with above mentioned data augmentation. A pretrained `resnet152` architecture is used. The model achieves an accuracy of **88.7%** without TTA and **89.7%** with TTA
  * Trained model can be found in this [Google Drive](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing) under `experiment-1` folder.
  * To evaluate the model on a test set, use `test.py` located in the folder. The results are stored in folder specified by argument `--result_dir`. It contains the `predictions_TIMESTAMP.npy` (raw softmax scores for each test image), `predicted_labels_with_confidence_TIMESTAMP.npy` (confidence scores and the predicted label) and `test_file_names_TIMESTAMP.csv` (test image names to match the predictions).
  * Sample usage of `test.py`
     * `python test.py --test_path=data/cars_test --model_path=data/cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results` - with TTA
     * `python test.py --test_path=data/cars_test --model_path=data/cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --no_tta` - without TTA
 * `experiment-2`
- * In this experiment, the model is trained on vertical crops of images, similar to `experiment-1`. The difference being that the images are pre-processed to extract the car out of the image (using YOLO detector in opencv) and these car-crop images are futher prcessed to split each images into two by cutting them vertically in the center. The YOLO dectector is pretrained on the PASCAL dataset. This model achieves an accyracy of **90.5** for both with and without TTA.
+ * In this experiment, the model is trained on vertical split images, similar to `experiment-1`. The difference being that the images are pre-processed to extract the car out of the image (using [YOLO detector](https://www.pyimagesearch.com/2018/11/12/yolo-object-detection-with-opencv/) in opencv) and these car-crop images are further processed to split each images into two by cutting them vertically in the center. The YOLO detector is pretrained on the PASCAL dataset. This is done by `crop_cars2` function. The code for this is borrowed from [here](https://www.pyimagesearch.com/2018/11/12/yolo-object-detection-with-opencv/). This model achieves an accuracy of **90.5%** for both with and without TTA. One problem of this is that the YOLO object-detector in opencv does not run on the GPU and hence is slow.
+  * Trained model can be found in this [Google Drive](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing) under `experiment-2` folder.
+  * To evaluate the model on a test set, use `test.py` located in the folder. The results are stored in folder specified by argument `--result_dir`. It contains the `predictions_TIMESTAMP.npy` (raw softmax scores for each test image), `predicted_labels_with_confidence_TIMESTAMP.npy` (confidence scores and the predicted label) and `test_file_names_TIMESTAMP.csv` (test image names to match the predictions).
+  * Sample usage of `test.py`
+     * `python test.py --test_path=data/cars_test --model_path=data/cropped_cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-yolo-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --yolo_dir=data/yolo-object-detection` - with TTA
+     * `python eval-final1_2x-yolo-aug-resnet152.py --test_path=data/cars_test --model_path=data/cropped_cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-yolo-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --yolo_dir=data/yolo-object-detection --no_tta` - without TTA
+     * You can download the YOLO pretrained weights and config file from [here](https://s3-us-west-2.amazonaws.com/static.pyimagesearch.com/opencv-yolo/yolo-object-detection.zip) - source [https://www.pyimagesearch.com](https://www.pyimagesearch.com/2018/11/12/yolo-object-detection-with-opencv/)
 
 Trained models:
-* Expermient-wise trained models and other information can be downloaded from [here](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing)
-
+* Experiment-wise trained models and other information can be downloaded from [here](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing)
