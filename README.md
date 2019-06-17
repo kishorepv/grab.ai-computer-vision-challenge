@@ -24,7 +24,7 @@ Performance:
 * Accuracy on the test set of [Stanford Cars dataset](http://imagenet.stanford.edu/internal/car196/cars_train.tgz) is 90%
 
 Feature engineering:
-* One interesting observation was that the model can identify a car well enough just by looking at the front or back of the car. Leveraging this, the train dataset is preprocessed such that each input image is split into halves vertically, each of which is a new image sharing the original label. This effectively doubles the train dataset. This is done by the function `vertical_splitter`
+* One interesting observation was that the model can identify a car well enough just by looking at the front or back of the car. Leveraging this, the train dataset is preprocessed such that each input image is split into halves vertically, each of which is a new image sharing the original label. This effectively doubles the train dataset. This is done by the function `vertical_splitter`. During test time, each image is split using this function and the resultant softmax scores of the two images are averaged and returned as a single prediction.
 * Most of the images contain non-car information in it. Cropping out the car and using it for prediction can improve the performance of the model. To crop the cars out the images, the [YOLO model](https://docs.opencv.org/master/da/d9d/tutorial_dnn_yolo.html) available in opencv is used
 
 Data Augmentation:
@@ -68,6 +68,8 @@ Each experiment folder contains a different model which has an associated notebo
      * `python test.py --test_path=data/cars_test --model_path=data/cropped_cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-yolo-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --yolo_dir=data/yolo-object-detection` - with TTA
      * `python eval-final1_2x-yolo-aug-resnet152.py --test_path=data/cars_test --model_path=data/cropped_cars_train_2x --model_name=MODEL-final-stanford-cars-1x2-tfms-yolo-res152.pkl --ylabel_path=data/test_labels.csv --result_dir=results --yolo_dir=data/yolo-object-detection --no_tta` - without TTA
      * You can download the YOLO pretrained weights and config file from [here](https://s3-us-west-2.amazonaws.com/static.pyimagesearch.com/opencv-yolo/yolo-object-detection.zip) - source [https://www.pyimagesearch.com](https://www.pyimagesearch.com/2018/11/12/yolo-object-detection-with-opencv/)
-
+* `other-experiments`
+ * Contains notebooks for experiments that did not perform as well as `experiment-1` or `experiment-2`
+ 
 Trained models:
 * Experiment-wise trained models and other information can be downloaded from [here](https://drive.google.com/drive/folders/1tGeFQ9ZRELc2yfw0t9zjIKJzeMnHuGV8?usp=sharing)
