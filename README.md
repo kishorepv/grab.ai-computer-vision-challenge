@@ -4,7 +4,7 @@ Classification on Stanford Cars Dataset
 This repository contains code to train the Stanford Cars dataset.
 
 
-Setup:
+
 Requirements:
 * `python3`
  * `fastai - 1.0.53.post2` (uses `PyTorch`)
